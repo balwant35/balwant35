@@ -8,6 +8,7 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,8 +28,11 @@ public class Inbox {
 	@Id
 	@GeneratedValue
 	private int id;
+	@OneToOne
 	private User sender;
+	@OneToOne
 	private User receiver;
+	@OneToOne
 	private Message message;
 	private Date sendTime;
 	

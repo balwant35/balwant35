@@ -6,6 +6,7 @@ package com.accolite.kaisehai.entity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,4 +27,6 @@ public class Message {
 	@GeneratedValue
 	private int id;
 	private String message;
+	@ManyToOne
+	User user;
 }
