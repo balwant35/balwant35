@@ -3,6 +3,8 @@
  */
 package com.accolite.kaisehai.common;
 
+import javax.validation.constraints.NotEmpty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,8 +19,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MessageRequest {
 
+	@NotEmpty
 	private String message;
+	
+	@NotEmpty
 	private Integer sender;
-	private Integer reciever;
+	
+	@NotEmpty
+	private Integer receiver;
 	
 }

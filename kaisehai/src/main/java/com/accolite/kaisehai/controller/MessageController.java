@@ -3,19 +3,25 @@
  */
 package com.accolite.kaisehai.controller;
 
+import java.security.Principal;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.accolite.kaisehai.common.MessageRequest;
-import com.accolite.kaisehai.common.MessageResponse;
 import com.accolite.kaisehai.entity.Inbox;
 import com.accolite.kaisehai.entity.Message;
 import com.accolite.kaisehai.service.MessageService;
@@ -33,24 +39,18 @@ public class MessageController {
 	MessageService messageService;
 	
 	@PostMapping("/sendMessage")
-	public MessageResponse sendMessage(@RequestBody MessageRequest messageRequest) {
+	public ResponseEntity<Inbox> sendMessage(@Valid @RequestBody MessageRequest messageRequest) {
 		
-		MessageResponse response = new MessageResponse();
 		Inbox inbox = messageService.sendMessage(messageRequest);
-		if (inbox != null) {
-			response.setStatusCode(HttpStatus.OK);
-			response.setStatusMessage("Message sent to "+inbox.getReceiver().getName());
-		} 
-		else {
-			response.setStatusCode(HttpStatus.BAD_REQUEST);
-		}
-		return response;
+		return new ResponseEntity<Inbox>(inbox, HttpStatus.OK);
 	}
 	
 	@GetMapping("/getAllMessagesByUser/{userId}")
-	public List<Message> getAllMessagesByUser(@PathVariable("userId") Integer userId) {
+	public List<Message> getAllMessagesByUser(@PathVariable("userId") Integer userId, @RequestParam("pageNum") Integer pageNum, @RequestParam("perPage") Integer perPage) {
 		
-		List<Message> messages = messageService.getAllMessagesByUser(userId);
+		Pageable pageable = PageRequest.of(pageNum, perPage);
+		
+		List<Message> messages = messageService.getAllMessagesByUser(userId, pageable);
 		return messages;
 	}
 }

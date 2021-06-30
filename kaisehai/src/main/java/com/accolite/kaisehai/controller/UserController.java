@@ -5,7 +5,11 @@ package com.accolite.kaisehai.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,8 +33,9 @@ public class UserController {
 	UserService userService;
 	
 	@PostMapping("/add")
-	public User addUser(@RequestBody User user) {
-		return userService.addUser(user);
+	public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
+		User savedUser = userService.addUser(user);
+		return new ResponseEntity<User>(savedUser, HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/get/{userId}")

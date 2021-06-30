@@ -7,10 +7,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.accolite.kaisehai.common.MessageRequest;
-import com.accolite.kaisehai.common.MessageResponse;
 import com.accolite.kaisehai.entity.Inbox;
 import com.accolite.kaisehai.entity.Message;
 import com.accolite.kaisehai.entity.User;
@@ -41,24 +41,25 @@ public class MessageService {
 		message.setMessage(messageRequest.getMessage());
 		message = messageRepository.save(message);
 		
-		Inbox inbox = new Inbox();
+		Inbox inbox = null;
 		
 		if (message != null) {
+			inbox = new Inbox();
 			User sender = userRepository.getById(messageRequest.getSender());
 			inbox.setSender(sender);
-			User reciever = userRepository.getById(messageRequest.getReciever());
+			User reciever = userRepository.getById(messageRequest.getReceiver());
 			inbox.setReceiver(reciever);
 			inbox.setMessage(message);
 			inbox.setSendTime(new Date());
+			inbox = inboxRepository.save(inbox);
 		}
 		
-		return inboxRepository.save(inbox);
+		return inbox;
 	}
 
-	public List<Message> getAllMessagesByUser(Integer userId) {
+	public List<Message> getAllMessagesByUser(Integer userId, Pageable pageable) {
 
-		User user = userRepository.getById(userId);
-		return user.getMessages();
+		return messageRepository.findMessagesByUser(userId, pageable);
 	}
 
 }
