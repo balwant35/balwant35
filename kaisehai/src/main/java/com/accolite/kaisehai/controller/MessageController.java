@@ -3,7 +3,6 @@
  */
 package com.accolite.kaisehai.controller;
 
-import java.security.Principal;
 import java.util.List;
 
 import javax.validation.Valid;
