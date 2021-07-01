@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.accolite.kaisehai.common.MessageRequest;
@@ -34,6 +35,9 @@ public class MessageService {
 	
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	RedisTemplate<String, Object> redisTemplate;
 
 	public Inbox sendMessage(MessageRequest messageRequest) {
 		
@@ -57,9 +61,18 @@ public class MessageService {
 		return inbox;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Message> getAllMessagesByUser(Integer userId, Pageable pageable) {
 
-		return messageRepository.findMessagesByUser(userId, pageable);
+		List<Message> messages;
+		final String key = userId+pageable.getPageNumber()+"";
+		messages = (List<Message>) redisTemplate.opsForValue().get(key);
+		
+		if (messages == null) {
+			messages = messageRepository.findMessagesByUser(userId, pageable);
+			redisTemplate.opsForValue().set(key, messages);
+		}
+		return messages;
 	}
 
 }
