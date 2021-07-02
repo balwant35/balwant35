@@ -5,6 +5,8 @@ package com.accolite.kaisehai.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +14,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.accolite.kaisehai.common.MessageRequest;
+import com.accolite.kaisehai.consumer.MessageConsumer;
 import com.accolite.kaisehai.entity.Inbox;
 import com.accolite.kaisehai.entity.Message;
 import com.accolite.kaisehai.entity.User;
@@ -37,6 +40,9 @@ public class MessageService {
 	UserRepository userRepository;
 	
 	@Autowired
+	MessageConsumer messageConsumer;
+	
+	@Autowired
 	RedisTemplate<String, Object> redisTemplate;
 
 	public Inbox sendMessage(MessageRequest messageRequest) {
@@ -49,9 +55,9 @@ public class MessageService {
 		
 		if (message != null) {
 			inbox = new Inbox();
-			User sender = userRepository.getById(messageRequest.getSender());
+			User sender = userRepository.findById(messageRequest.getSender()).orElseThrow(NoSuchElementException::new);
 			inbox.setSender(sender);
-			User reciever = userRepository.getById(messageRequest.getReceiver());
+			User reciever = userRepository.findById(messageRequest.getReceiver()).orElseThrow(NoSuchElementException::new);
 			inbox.setReceiver(reciever);
 			inbox.setMessage(message);
 			inbox.setSendTime(new Date());
@@ -73,6 +79,11 @@ public class MessageService {
 			redisTemplate.opsForValue().set(key, messages);
 		}
 		return messages;
+	}
+
+	public List<Message> getAllMessagesFromQueue(Integer userId) {
+		Map<Integer, List<Message>> messages = messageConsumer.getMessages();
+		return messages.get(userId);
 	}
 
 }

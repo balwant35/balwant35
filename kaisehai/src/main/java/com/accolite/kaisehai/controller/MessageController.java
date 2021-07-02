@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.accolite.kaisehai.common.MessageRequest;
+import com.accolite.kaisehai.config.RabbitMQConfig;
 import com.accolite.kaisehai.entity.Inbox;
 import com.accolite.kaisehai.entity.Message;
+import com.accolite.kaisehai.producer.MessageProducer;
 import com.accolite.kaisehai.service.MessageService;
 
 /**
@@ -37,10 +39,14 @@ public class MessageController {
 	@Autowired
 	MessageService messageService;
 	
+	@Autowired
+	MessageProducer messageProducer;
+	
 	@PostMapping("/sendMessage")
 	public ResponseEntity<Inbox> sendMessage(@Valid @RequestBody MessageRequest messageRequest) {
 		
 		Inbox inbox = messageService.sendMessage(messageRequest);
+		messageProducer.postDataToRabbitMQ(inbox);
 		return new ResponseEntity<Inbox>(inbox, HttpStatus.OK);
 	}
 	
@@ -50,6 +56,13 @@ public class MessageController {
 		Pageable pageable = PageRequest.of(pageNum, perPage);
 		
 		List<Message> messages = messageService.getAllMessagesByUser(userId, pageable);
+		return messages;
+	}
+	
+	@GetMapping("/getAllMessagesFromQueue/{userId}")
+	public List<Message> getAllMessagesFromQueue(@PathVariable("userId") Integer userId) {
+	
+		List<Message> messages = messageService.getAllMessagesFromQueue(userId);
 		return messages;
 	}
 }

@@ -4,6 +4,7 @@
 package com.accolite.kaisehai.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class UserService {
 	}
 
 	public User getUser(Integer userId) {
-		return userRepository.getById(userId);
+		return userRepository.findById(userId).orElseThrow(NoSuchElementException::new);
 	}
 
 	public List<User> getAllUsers() {

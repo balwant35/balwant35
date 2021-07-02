@@ -40,7 +40,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/get/{userId}")
-	@Cacheable(key = "#userId", value = "users")
+	@Cacheable(key = "#User", value = "User")
 	public User getUser(@PathVariable("userId") Integer userId) {
 		return userService.getUser(userId);
 	}

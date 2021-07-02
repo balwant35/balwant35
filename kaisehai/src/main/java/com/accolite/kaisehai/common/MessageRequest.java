@@ -3,7 +3,10 @@
  */
 package com.accolite.kaisehai.common;
 
+
+
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,10 +25,10 @@ public class MessageRequest {
 	@NotEmpty
 	private String message;
 	
-	@NotEmpty
+	@NotNull
 	private Integer sender;
 	
-	@NotEmpty
+	@NotNull
 	private Integer receiver;
 	
 }
