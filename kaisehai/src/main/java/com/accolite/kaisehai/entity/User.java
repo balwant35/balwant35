@@ -3,6 +3,7 @@
  */
 package com.accolite.kaisehai.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -29,8 +30,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @RedisHash("User")
-public class User {
+public class User implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;

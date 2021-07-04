@@ -6,6 +6,8 @@ package com.accolite.kaisehai.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +40,15 @@ public class UserService {
 
 	public List<User> getAllUsers() {
 		return userRepository.findAll();
+	}
+
+	public User updateUser(@Valid User user) {
+		return userRepository.save(user);
+	}
+
+	public boolean deleteUser(Integer userId) {
+		userRepository.deleteById(userId);
+		return true;
 	}
 
 }

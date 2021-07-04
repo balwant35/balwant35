@@ -3,6 +3,7 @@
  */
 package com.accolite.kaisehai.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -28,7 +29,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @RedisHash("Inbox")
-public class Inbox {
+public class Inbox implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

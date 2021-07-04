@@ -71,10 +71,10 @@ public class MessageService {
 	public List<Message> getAllMessagesByUser(Integer userId, Pageable pageable) {
 
 		List<Message> messages;
-		final String key = userId+pageable.getPageNumber()+"";
+		final String key = Integer.toString(userId+pageable.getPageNumber());
 		messages = (List<Message>) redisTemplate.opsForValue().get(key);
 		
-		if (messages == null) {
+		if (messages == null || messages.size() == 0) {
 			messages = messageRepository.findMessagesByUser(userId, pageable);
 			redisTemplate.opsForValue().set(key, messages);
 		}
