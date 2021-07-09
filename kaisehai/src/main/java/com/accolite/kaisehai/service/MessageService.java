@@ -3,6 +3,7 @@
  */
 package com.accolite.kaisehai.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -51,18 +52,14 @@ public class MessageService {
 		message.setMessage(messageRequest.getMessage());
 		message = messageRepository.save(message);
 		
-		Inbox inbox = null;
-		
-		if (message != null) {
-			inbox = new Inbox();
-			User sender = userRepository.findById(messageRequest.getSender()).orElseThrow(NoSuchElementException::new);
-			inbox.setSender(sender);
-			User reciever = userRepository.findById(messageRequest.getReceiver()).orElseThrow(NoSuchElementException::new);
-			inbox.setReceiver(reciever);
-			inbox.setMessage(message);
-			inbox.setSendTime(new Date());
-			inbox = inboxRepository.save(inbox);
-		}
+		Inbox inbox = new Inbox();
+		User sender = userRepository.findById(messageRequest.getSender()).orElseThrow(NoSuchElementException::new);
+		inbox.setSender(sender);
+		User reciever = userRepository.findById(messageRequest.getReceiver()).orElseThrow(NoSuchElementException::new);
+		inbox.setReceiver(reciever);
+		inbox.setMessage(message);
+		inbox.setSendTime(new Date());
+		inbox = inboxRepository.save(inbox);
 		
 		return inbox;
 	}
@@ -82,8 +79,10 @@ public class MessageService {
 	}
 
 	public List<Message> getAllMessagesFromQueue(Integer userId) {
-		Map<Integer, List<Message>> messages = messageConsumer.getMessages();
-		return messages.get(userId);
+		Map<Integer, List<Message>> messageMap = messageConsumer.getMessages();
+		List<Message> messages = new ArrayList<Message>(messageMap.get(userId));
+		messageMap.get(userId).clear();
+		return messages;
 	}
 
 }

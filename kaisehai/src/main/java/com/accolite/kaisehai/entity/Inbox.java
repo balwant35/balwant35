@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotEmpty;
 
-import org.springframework.data.redis.core.RedisHash;
+import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,7 +28,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@RedisHash("Inbox")
 public class Inbox implements Serializable {
 
 	/**
@@ -49,7 +48,7 @@ public class Inbox implements Serializable {
 	@OneToOne
 	private Message message;
 	
-	@NotEmpty
+	@CreationTimestamp
 	private Date sendTime;
 	
 }

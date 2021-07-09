@@ -21,8 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.accolite.kaisehai.common.MessageRequest;
-import com.accolite.kaisehai.config.RabbitMQConfig;
-import com.accolite.kaisehai.entity.Inbox;
+import com.accolite.kaisehai.common.MessageResponse;
 import com.accolite.kaisehai.entity.Message;
 import com.accolite.kaisehai.producer.MessageProducer;
 import com.accolite.kaisehai.service.MessageService;
@@ -43,11 +42,10 @@ public class MessageController {
 	MessageProducer messageProducer;
 	
 	@PostMapping("/sendMessage")
-	public ResponseEntity<Inbox> sendMessage(@Valid @RequestBody MessageRequest messageRequest) {
+	public ResponseEntity<MessageResponse> sendMessage(@Valid @RequestBody MessageRequest messageRequest) {
 		
-		Inbox inbox = messageService.sendMessage(messageRequest);
-		messageProducer.postDataToRabbitMQ(inbox);
-		return new ResponseEntity<Inbox>(inbox, HttpStatus.OK);
+		messageProducer.postDataToRabbitMQ(messageRequest);
+		return new ResponseEntity<MessageResponse>(new MessageResponse(messageRequest, "Message successfully sent to Rabbit MQ"), HttpStatus.OK);
 	}
 	
 	@GetMapping("/getAllMessagesByUser/{userId}")
