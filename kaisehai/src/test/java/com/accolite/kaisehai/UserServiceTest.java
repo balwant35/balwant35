@@ -36,7 +36,7 @@ public class UserServiceTest {
 	@Test
 	public void getUserByIdTest() {
 		
-		User expectedUser = new User(694514746, "balwant", "9590518203", "balwant@acco.com", null);
+		User expectedUser = new User(694514746, "balwant", "9590518203", "balwant@acco.com");
 		Mockito.when(userRepository.findById(694514746)).thenReturn(Optional
 				.of(expectedUser));
 		
@@ -49,9 +49,9 @@ public class UserServiceTest {
 	public void getAllUsersTest() {
 		
 		List<User> expectedUsers = Stream.
-				of(new User(694514746, "user1", "9590518203", "user1@acco.com", null), 
-				   new User(694514747, "user2", "9590518203", "user2@acco.com", null), 
-				   new User(694514748, "user3", "9590518203", "user3@acco.com", null))
+				of(new User(694514746, "user1", "9590518203", "user1@acco.com"), 
+				   new User(694514747, "user2", "9590518203", "user2@acco.com"), 
+				   new User(694514748, "user3", "9590518203", "user3@acco.com"))
 				.collect(Collectors.toList());
 		
 		Mockito.when(userRepository.findAll()).thenReturn(expectedUsers);

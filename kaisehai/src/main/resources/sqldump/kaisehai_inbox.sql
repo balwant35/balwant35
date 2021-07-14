@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `inbox`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `inbox` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `send_time` datetime DEFAULT NULL,
   `message_id` int DEFAULT NULL,
   `receiver_id` int DEFAULT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE `inbox` (
   KEY `FKmdb41voa21h8w7q9l119p2t91` (`message_id`),
   KEY `FK7vlo3faysk6gpq34ggjlrhc3s` (`receiver_id`),
   KEY `FK4s7hw5eyjc90amshnn6k6f6jn` (`sender_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,6 +41,7 @@ CREATE TABLE `inbox` (
 
 LOCK TABLES `inbox` WRITE;
 /*!40000 ALTER TABLE `inbox` DISABLE KEYS */;
+INSERT INTO `inbox` VALUES (1,'2021-07-14 23:35:16',1,1,1);
 /*!40000 ALTER TABLE `inbox` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-30  5:13:41
+-- Dump completed on 2021-07-14 23:38:02

@@ -72,7 +72,11 @@ public class MessageService {
 		messages = (List<Message>) redisTemplate.opsForValue().get(key);
 		
 		if (messages == null || messages.size() == 0) {
-			messages = messageRepository.findMessagesByUser(userId, pageable);
+			List<Inbox> inboxes = inboxRepository.findInboxesByReceiver(userId, pageable);
+			messages = new ArrayList<Message>();
+			for(Inbox inbox : inboxes) {
+				messages.add(inbox.getMessage());
+			}
 			redisTemplate.opsForValue().set(key, messages);
 		}
 		return messages;
